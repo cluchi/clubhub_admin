@@ -34,14 +34,16 @@ import SearchIcon from "@mui/icons-material/Search";
 
 const ClassesPage: React.FC = () => {
   const [trainers, setTrainers] = useState<Trainer[]>([]);
-  type CourseWithTrainer = Course & { trainer?: Trainer; trainer_id?: string };
+  type CourseWithTrainer = Course & { trainer?: Trainer };
   const [courses, setCourses] = useState<CourseWithTrainer[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editCourse, setEditCourse] = useState<Course | null>(null);
-  type EditCourseValues = Partial<Course>;
+  type EditCourseValues = Partial<Course> & {
+    trainer?: Trainer;
+  };
   const [editValues, setEditValues] = useState<EditCourseValues>({
     pricing: { drop_in: 0, monthly: 0, quarterly: 0 },
     age_range: "",
@@ -54,7 +56,10 @@ const ClassesPage: React.FC = () => {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [filterClubId, setFilterClubId] = useState<string>("");
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
-  const [createValues, setCreateValues] = useState<Partial<Course>>({
+  type CreateCourseValues = Partial<Course> & {
+    trainer?: Trainer;
+  };
+  const [createValues, setCreateValues] = useState<CreateCourseValues>({
     pricing: { drop_in: 0, monthly: 0, quarterly: 0 },
     age_range: "",
     skill_level: "",
@@ -89,12 +94,9 @@ const ClassesPage: React.FC = () => {
       const payload = {
         ...createValues,
       };
-      // Remove instructor from payload if present
-      if ("instructor" in payload) {
-        delete (payload as any).instructor;
-      }
+      // ...existing code...
       if ("trainer" in payload) {
-        delete (payload as any).trainer;
+        delete payload.trainer;
       }
       console.log("Creating course with payload:", payload);
       const result = await createCourse(payload);
@@ -183,8 +185,7 @@ const ClassesPage: React.FC = () => {
       spots_available: course.spots_available ?? 0,
       total_spots: course.total_spots ?? 0,
       category: course.category ?? "",
-      trainer_id:
-        (course as any).trainer_id || (course as any).instructor || "",
+      trainer_id: course.trainer_id || "",
     });
     setEditError(null);
     setEditDialogOpen(true);
@@ -216,12 +217,9 @@ const ClassesPage: React.FC = () => {
         const payload = {
           ...editValues,
         };
-        // Remove instructor from payload if present
-        if ("instructor" in payload) {
-          delete (payload as any).instructor;
-        }
+        // ...existing code...
         if ("trainer" in payload) {
-          delete (payload as any).trainer;
+          delete payload.trainer;
         }
         const result = await updateCourse(editCourse.id, payload);
         if (!result) {
@@ -493,19 +491,19 @@ const ClassesPage: React.FC = () => {
                       ? course.schedule.map(
                           (
                             slot: { days?: string[]; time?: string },
-                            idx: number
+                            idx: number,
                           ) => (
                             <div key={idx}>
                               {slot.days?.join(", ")}
                               {slot.days && slot.time ? " - " : ""}
                               {slot.time}
                             </div>
-                          )
+                          ),
                         )
                       : typeof course.schedule === "object" &&
-                        course.schedule !== null
-                      ? JSON.stringify(course.schedule)
-                      : String(course.schedule)}
+                          course.schedule !== null
+                        ? JSON.stringify(course.schedule)
+                        : String(course.schedule)}
                   </TableCell>
                   <TableCell align="right">
                     <IconButton onClick={() => handleEdit(course)} size="small">

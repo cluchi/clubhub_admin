@@ -37,8 +37,12 @@ const AuthPage: React.FC = () => {
         const { error } = await signUp(email, password);
         if (error) setError(error.message);
       }
-    } catch (err: any) {
-      setError(err.message || "Unknown error");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Unknown error");
+      }
     } finally {
       setPending(false);
     }
@@ -49,8 +53,12 @@ const AuthPage: React.FC = () => {
     setError(null);
     try {
       await signOut();
-    } catch (err: any) {
-      setError(err.message || "Unknown error");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Unknown error");
+      }
     } finally {
       setPending(false);
     }

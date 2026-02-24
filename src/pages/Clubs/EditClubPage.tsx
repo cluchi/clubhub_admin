@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import type { Database } from "../../types/supabase";
 import {
   Box,
   Typography,
@@ -13,7 +14,8 @@ import { useAuth } from "../../hooks/useAuth";
 
 const EditClubPage: React.FC = () => {
   const { user } = useAuth();
-  const [club, setClub] = useState<any>(null);
+  type Club = Database["public"]["Tables"]["clubs"]["Row"];
+  const [club, setClub] = useState<Club | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
