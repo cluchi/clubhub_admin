@@ -26,6 +26,7 @@ import {
   createCourse,
 } from "../../services/api/courses";
 import { getTrainersByClub } from "../../services/api/trainers";
+import { getClubs } from "../../services/api/clubs";
 import type { Trainer } from "../../services/api/trainers";
 import type { Course } from "../../types";
 import EditIcon from "@mui/icons-material/Edit";
@@ -68,6 +69,13 @@ const ClassesPage: React.FC = () => {
     category: "",
     trainer_id: "",
   });
+  const [clubs, setClubs] = useState<
+    {
+      id: string;
+      name: string;
+      description: string;
+    }[]
+  >([]);
   const [createError, setCreateError] = useState<string | null>(null);
   const handleCreateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -167,6 +175,19 @@ const ClassesPage: React.FC = () => {
     fetchCourses();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
+
+  // Fetch clubs for dropdown
+  useEffect(() => {
+    const fetchClubs = async () => {
+      try {
+        const data = await getClubs();
+        setClubs(data);
+      } catch {
+        setClubs([]);
+      }
+    };
+    fetchClubs();
+  }, []);
 
   const [editError, setEditError] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
@@ -270,8 +291,6 @@ const ClassesPage: React.FC = () => {
     const matchesClub = filterClubId ? course.club_id === filterClubId : true;
     return matchesSearch && matchesClub;
   });
-
-  const uniqueClubIds = Array.from(new Set(courses.map((c) => c.club_id)));
 
   return (
     <Box>
@@ -451,9 +470,9 @@ const ClassesPage: React.FC = () => {
           sx={{ minWidth: 180 }}
         >
           <MenuItem value="">All</MenuItem>
-          {uniqueClubIds.map((id) => (
-            <MenuItem key={id} value={id}>
-              {id}
+          {clubs.map((club) => (
+            <MenuItem key={club.id} value={club.id}>
+              {club.name}
             </MenuItem>
           ))}
         </TextField>
@@ -469,7 +488,7 @@ const ClassesPage: React.FC = () => {
               <TableRow>
                 <TableCell>Name</TableCell>
                 <TableCell>Description</TableCell>
-                <TableCell>Club ID</TableCell>
+                <TableCell>Club Name</TableCell>
                 <TableCell>Trainer</TableCell>
                 <TableCell>Schedule</TableCell>
                 <TableCell align="right">Actions</TableCell>
@@ -480,7 +499,10 @@ const ClassesPage: React.FC = () => {
                 <TableRow key={course.id}>
                   <TableCell>{course.name}</TableCell>
                   <TableCell>{course.description}</TableCell>
-                  <TableCell>{course.club_id}</TableCell>
+                  <TableCell>
+                    {clubs.find((club) => club.id === course.club_id)?.name ||
+                      course.club_id}
+                  </TableCell>
                   <TableCell>
                     {course.trainer && course.trainer.name
                       ? course.trainer.name

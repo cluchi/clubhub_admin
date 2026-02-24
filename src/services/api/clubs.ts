@@ -1,4 +1,4 @@
-import { Club } from "../../types";
+import type { Club } from "../../types";
 import { supabase } from "../supabase";
 
 export async function getClubs(): Promise<Club[]> {

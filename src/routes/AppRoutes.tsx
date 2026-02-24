@@ -9,6 +9,7 @@ import TrainersPage from "../pages/Trainers/TrainersPage";
 import PaymentsPage from "../pages/Payments/PaymentsPage";
 import NotificationsPage from "../pages/Notifications/NotificationsPage";
 import SettingsPage from "../pages/Settings/SettingsPage";
+import ClubsPage from "../pages/Clubs/ClubsPage";
 import EditClubPage from "../pages/Clubs/EditClubPage";
 import AuthPage from "../pages/Auth/AuthPage";
 
@@ -28,6 +29,7 @@ const AppRoutes = () => (
             <Route path="/payments" element={<PaymentsPage />} />
             <Route path="/notifications" element={<NotificationsPage />} />
             <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/clubs" element={<ClubsPage />} />
             <Route path="/clubs/edit" element={<EditClubPage />} />
           </Routes>
         </ProtectedRoute>

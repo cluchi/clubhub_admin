@@ -37,7 +37,17 @@ export interface Database {
           id: string;
           name: string;
           description: string;
-          // ...add other columns as needed
+          address: string | null;
+          phone: string | null;
+          email: string | null;
+          website: string | null;
+
+          contact_person: string | null;
+          contact_email: string | null;
+          contact_phone: string | null;
+          status: string;
+          created_at: string;
+          updated_at: string;
         };
       };
       courses: {

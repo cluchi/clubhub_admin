@@ -29,6 +29,7 @@ const drawerWidth = 220;
 const navItems = [
   { text: "Dashboard", icon: <DashboardIcon />, path: "/" },
   { text: "Classes", icon: <ClassIcon />, path: "/classes" },
+  { text: "Clubs", icon: <BusinessIcon />, path: "/clubs" },
   { text: "Subscriptions", icon: <BookIcon />, path: "/subscriptions" },
   { text: "Bookings", icon: <BookIcon />, path: "/bookings" },
   { text: "Trainers", icon: <PeopleIcon />, path: "/trainers" },
