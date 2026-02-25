@@ -1,4 +1,4 @@
-import { PaymentMethod } from "../../types";
+import type { PaymentMethod } from "../../types";
 import { supabase } from "../supabase";
 
 export async function getPaymentMethods(): Promise<PaymentMethod[]> {

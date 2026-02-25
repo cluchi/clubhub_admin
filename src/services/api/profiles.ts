@@ -1,4 +1,4 @@
-import { Profile } from "../../types";
+import type { Profile } from "../../types";
 import { supabase } from "../supabase";
 
 export async function getProfiles(): Promise<Profile[]> {

@@ -1,4 +1,4 @@
-import { Child } from "../../types";
+import type { Child } from "../../types";
 import { supabase } from "../supabase";
 
 export async function getChildren(): Promise<Child[]> {

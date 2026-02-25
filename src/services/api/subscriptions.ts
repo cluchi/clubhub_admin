@@ -1,4 +1,4 @@
-import { Subscription } from "../../types";
+import type { Subscription } from "../../types";
 import { supabase } from "../supabase";
 
 export async function getSubscriptions(): Promise<Subscription[]> {

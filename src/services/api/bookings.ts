@@ -1,4 +1,4 @@
-import { Booking } from "../../types";
+import type { Booking } from "../../types";
 import { supabase } from "../supabase";
 
 export async function getBookings(): Promise<Booking[]> {

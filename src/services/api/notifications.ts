@@ -1,4 +1,4 @@
-import { Notification } from "../../types";
+import type { Notification } from "../../types";
 import { supabase } from "../supabase";
 
 export async function getNotifications(): Promise<Notification[]> {
