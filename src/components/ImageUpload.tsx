@@ -96,7 +96,6 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       // Delete from Supabase if URL exists
       if (currentImageUrl) {
         await ImageUploadService.deleteImage(currentImageUrl);
-        console.log("Deleted image from storage:", currentImageUrl);
       }
 
       // Clear all local state
