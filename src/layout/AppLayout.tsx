@@ -44,7 +44,7 @@ const navItems = [
 ];
 
 const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
   const navigate = useNavigate();
 
   const { user, signOut } = useAuth();
@@ -91,7 +91,8 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       </AppBar>
       <Drawer
         variant="persistent"
-        open={open}
+        // open={open}
+        open
         onClose={() => setOpen(false)}
         sx={{
           width: drawerWidth,
@@ -120,7 +121,9 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         sx={{
           flexGrow: 1,
           p: 3,
-          ml: open ? `${drawerWidth}px` : 0,
+          width: "100%",
+          height: "100vh",
+          // ml: open ? `${drawerWidth}px` : 0,
           transition: "margin 0.3s",
         }}
       >
