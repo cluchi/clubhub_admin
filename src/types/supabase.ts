@@ -105,6 +105,7 @@ export interface Database {
           name: string;
           email: string;
           phone: string | null;
+          status: string;
           created_at: string;
           // ...add other columns as needed
         };

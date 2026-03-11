@@ -33,6 +33,7 @@ const AddParentPage: React.FC = () => {
     name: "",
     email: "",
     phone: "",
+    status: "Active",
     clubIds: [] as string[],
   });
 
@@ -136,6 +137,7 @@ const AddParentPage: React.FC = () => {
         name: form.name.trim(),
         email: form.email.trim(),
         phone: form.phone.trim() || null,
+        status: form.status,
       };
 
       const result = await import("../../services/api/parents");
@@ -151,6 +153,7 @@ const AddParentPage: React.FC = () => {
           name: "",
           email: "",
           phone: "",
+          status: "Active",
           clubIds: userClubs.length === 1 ? [userClubs[0].id] : [],
         });
       } else {
@@ -208,6 +211,23 @@ const AddParentPage: React.FC = () => {
           fullWidth
           margin="normal"
         />
+
+        <FormControl fullWidth margin="normal" required>
+          <InputLabel>Status</InputLabel>
+          <Select
+            name="status"
+            value={form.status}
+            label="Status"
+            onChange={(e) =>
+              setForm((prev) => ({ ...prev, status: e.target.value }))
+            }
+          >
+            <MenuItem value="Active">Active</MenuItem>
+            <MenuItem value="Inactive">Inactive</MenuItem>
+            <MenuItem value="Pending">Pending</MenuItem>
+            <MenuItem value="Suspended">Suspended</MenuItem>
+          </Select>
+        </FormControl>
 
         <FormControl fullWidth margin="normal" required>
           <InputLabel>Clubs</InputLabel>

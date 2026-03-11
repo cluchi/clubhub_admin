@@ -31,11 +31,28 @@ const ParentsPage: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [parents, setParents] = useState<(Parent & { clubs: Club[] })[]>([]);
-  const [clubs, setClubs] = useState<Club[]>([]);
   const [userClubs, setUserClubs] = useState<Club[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedClubId, setSelectedClubId] = useState<string>("all");
+  const [selectedStatus, setSelectedStatus] = useState<string>("all");
+
+  const getStatusColor = (
+    status: string,
+  ): "success" | "error" | "warning" | "secondary" | "default" => {
+    switch (status) {
+      case "Active":
+        return "success";
+      case "Inactive":
+        return "error";
+      case "Pending":
+        return "warning";
+      case "Suspended":
+        return "secondary";
+      default:
+        return "default";
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -123,12 +140,18 @@ const ParentsPage: React.FC = () => {
     }
   };
 
-  const filteredParents =
-    selectedClubId === "all"
-      ? parents
-      : parents.filter((parent) =>
-          parent.clubs.some((club) => club.id === selectedClubId),
-        );
+  const filteredParents = parents.filter((parent) => {
+    // Filter by club
+    const clubMatch =
+      selectedClubId === "all" ||
+      parent.clubs.some((club) => club.id === selectedClubId);
+
+    // Filter by status
+    const statusMatch =
+      selectedStatus === "all" || parent.status === selectedStatus;
+
+    return clubMatch && statusMatch;
+  });
 
   if (loading) return <CircularProgress />;
   if (error) return <Alert severity="error">{error}</Alert>;
@@ -152,21 +175,37 @@ const ParentsPage: React.FC = () => {
       </Box>
 
       <Paper sx={{ mb: 3, p: 2 }}>
-        <FormControl fullWidth>
-          <InputLabel>Filter by Club</InputLabel>
-          <Select
-            value={selectedClubId}
-            label="Filter by Club"
-            onChange={(e) => setSelectedClubId(e.target.value)}
-          >
-            <MenuItem value="all">All Clubs</MenuItem>
-            {userClubs.map((club) => (
-              <MenuItem key={club.id} value={club.id}>
-                {club.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <Box display="grid" gridTemplateColumns="1fr 1fr" gap={2}>
+          <FormControl fullWidth>
+            <InputLabel>Filter by Club</InputLabel>
+            <Select
+              value={selectedClubId}
+              label="Filter by Club"
+              onChange={(e) => setSelectedClubId(e.target.value)}
+            >
+              <MenuItem value="all">All Clubs</MenuItem>
+              {userClubs.map((club) => (
+                <MenuItem key={club.id} value={club.id}>
+                  {club.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl fullWidth>
+            <InputLabel>Filter by Status</InputLabel>
+            <Select
+              value={selectedStatus}
+              label="Filter by Status"
+              onChange={(e) => setSelectedStatus(e.target.value)}
+            >
+              <MenuItem value="all">All Statuses</MenuItem>
+              <MenuItem value="Active">Active</MenuItem>
+              <MenuItem value="Inactive">Inactive</MenuItem>
+              <MenuItem value="Pending">Pending</MenuItem>
+              <MenuItem value="Suspended">Suspended</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
       </Paper>
 
       <TableContainer component={Paper}>
@@ -176,6 +215,7 @@ const ParentsPage: React.FC = () => {
               <TableCell>Name</TableCell>
               <TableCell>Email</TableCell>
               <TableCell>Phone</TableCell>
+              <TableCell>Status</TableCell>
               <TableCell>Clubs</TableCell>
               <TableCell align="right">Actions</TableCell>
             </TableRow>
@@ -187,7 +227,14 @@ const ParentsPage: React.FC = () => {
                 <TableCell>{parent.email}</TableCell>
                 <TableCell>{parent.phone || "-"}</TableCell>
                 <TableCell>
-                  {parent.clubs.map((club: Club) => (
+                  <Chip
+                    label={parent.status}
+                    color={getStatusColor(parent.status)}
+                    size="small"
+                  />
+                </TableCell>
+                <TableCell>
+                  {parent.clubs.map((club) => (
                     <Chip
                       key={club.id}
                       label={club.name}
