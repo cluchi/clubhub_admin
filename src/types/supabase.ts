@@ -85,6 +85,7 @@ export interface Database {
           id: string;
           subscription_id: string;
           date: string;
+          status: string;
           // ...add other columns as needed
         };
       };

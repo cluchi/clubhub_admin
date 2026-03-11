@@ -1,4 +1,4 @@
-import { Booking } from "../../types";
+import type { Booking } from "../../types";
 import { supabase } from "../supabase";
 
 export async function getBookings(): Promise<Booking[]> {
@@ -18,7 +18,7 @@ export async function getBookingById(id: string): Promise<Booking | null> {
 }
 
 export async function createBooking(
-  booking: Partial<Booking>
+  booking: Partial<Booking>,
 ): Promise<Booking | null> {
   const { data, error } = await supabase
     .from("bookings")
@@ -31,7 +31,7 @@ export async function createBooking(
 
 export async function updateBooking(
   id: string,
-  updates: Partial<Booking>
+  updates: Partial<Booking>,
 ): Promise<Booking | null> {
   const { data, error } = await supabase
     .from("bookings")

@@ -1,4 +1,4 @@
-import { Subscription } from "../../types";
+import type { Subscription } from "../../types";
 import { supabase } from "../supabase";
 
 export async function getSubscriptions(): Promise<Subscription[]> {
@@ -8,7 +8,7 @@ export async function getSubscriptions(): Promise<Subscription[]> {
 }
 
 export async function getSubscriptionById(
-  id: string
+  id: string,
 ): Promise<Subscription | null> {
   const { data, error } = await supabase
     .from("subscriptions")
@@ -20,7 +20,7 @@ export async function getSubscriptionById(
 }
 
 export async function createSubscription(
-  subscription: Partial<Subscription>
+  subscription: Partial<Subscription>,
 ): Promise<Subscription | null> {
   const { data, error } = await supabase
     .from("subscriptions")
@@ -33,7 +33,7 @@ export async function createSubscription(
 
 export async function updateSubscription(
   id: string,
-  updates: Partial<Subscription>
+  updates: Partial<Subscription>,
 ): Promise<Subscription | null> {
   const { data, error } = await supabase
     .from("subscriptions")
