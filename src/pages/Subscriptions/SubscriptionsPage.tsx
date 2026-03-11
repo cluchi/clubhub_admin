@@ -93,7 +93,7 @@ const SubscriptionsPage: React.FC = () => {
   const fetchSubscriptions = () => {
     if (user?.id) {
       setLoading(true);
-      getSubscriptions()
+      getSubscriptions(user.id)
         .then((data) => setSubscriptions(data))
         .catch((err) => setError(err.message || "Failed to load subscriptions"))
         .finally(() => setLoading(false));
@@ -132,6 +132,13 @@ const SubscriptionsPage: React.FC = () => {
     setLoading(true);
     setCreateError(null);
     try {
+      // Validate that child is selected
+      if (!createValues.child_id) {
+        setCreateError("Please select a child.");
+        setLoading(false);
+        return;
+      }
+
       const payload = {
         ...createValues,
       };
@@ -166,13 +173,6 @@ const SubscriptionsPage: React.FC = () => {
     });
     setEditError(null);
     setEditDialogOpen(true);
-  };
-
-  const handleEditChange = (
-    e: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>,
-  ) => {
-    const { name, value } = e.target;
-    setEditValues((prev) => ({ ...prev, [name as string]: value }));
   };
 
   const handleEditSave = async () => {
@@ -423,7 +423,10 @@ const SubscriptionsPage: React.FC = () => {
                             Schedule:{" "}
                             {Array.isArray(courseDetails.schedule)
                               ? courseDetails.schedule.map(
-                                  (slot: any, idx: number) => (
+                                  (
+                                    slot: { days: string[]; time: string },
+                                    idx: number,
+                                  ) => (
                                     <span key={idx}>
                                       {slot.days?.join(", ")} - {slot.time}
                                       {idx <
@@ -432,7 +435,7 @@ const SubscriptionsPage: React.FC = () => {
                                     </span>
                                   ),
                                 )
-                              : String(courseDetails.schedule)}
+                              : courseDetails.schedule || "No schedule"}
                           </Typography>
                           <Typography variant="body2">
                             Pricing: Drop-in $
@@ -494,7 +497,13 @@ const SubscriptionsPage: React.FC = () => {
                 name="child_id"
                 value={createValues.child_id || ""}
                 label="Child"
-                onChange={handleCreateChange}
+                onChange={(e) => {
+                  const { name, value } = e.target;
+                  setCreateValues((prev) => ({
+                    ...prev,
+                    [name as string]: value,
+                  }));
+                }}
                 required
               >
                 <MenuItem value="">Select Child</MenuItem>
@@ -512,7 +521,13 @@ const SubscriptionsPage: React.FC = () => {
                 name="course_id"
                 value={createValues.course_id || ""}
                 label="Course"
-                onChange={handleCreateChange}
+                onChange={(e) => {
+                  const { name, value } = e.target;
+                  setCreateValues((prev) => ({
+                    ...prev,
+                    [name as string]: value,
+                  }));
+                }}
                 required
               >
                 <MenuItem value="">Select Course</MenuItem>
@@ -530,7 +545,13 @@ const SubscriptionsPage: React.FC = () => {
                 name="status"
                 value={createValues.status || "pending"}
                 label="Status"
-                onChange={handleCreateChange}
+                onChange={(e) => {
+                  const { name, value } = e.target;
+                  setCreateValues((prev) => ({
+                    ...prev,
+                    [name as string]: value,
+                  }));
+                }}
               >
                 <MenuItem value="active">Active</MenuItem>
                 <MenuItem value="pending">Pending</MenuItem>
@@ -581,7 +602,13 @@ const SubscriptionsPage: React.FC = () => {
                     editValues.status || editSubscription.status || "pending"
                   }
                   label="Status"
-                  onChange={handleEditChange}
+                  onChange={(e) => {
+                    const { name, value } = e.target;
+                    setEditValues((prev) => ({
+                      ...prev,
+                      [name as string]: value,
+                    }));
+                  }}
                 >
                   <MenuItem value="active">Active</MenuItem>
                   <MenuItem value="pending">Pending</MenuItem>

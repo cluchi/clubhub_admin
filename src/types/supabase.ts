@@ -97,6 +97,14 @@ export interface Database {
           // ...add other columns as needed
         };
       };
+      parents: {
+        Row: {
+          id: string;
+          name: string;
+          email: string;
+          // ...add other columns as needed
+        };
+      };
       notifications: {
         Row: {
           id: string;

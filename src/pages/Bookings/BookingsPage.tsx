@@ -103,7 +103,7 @@ const BookingsPage: React.FC = () => {
   const fetchBookings = () => {
     if (user?.id) {
       setLoading(true);
-      getBookings()
+      getBookings(user.id)
         .then((data) => setBookings(data))
         .catch((err) => setError(err.message || "Failed to load bookings"))
         .finally(() => setLoading(false));
@@ -112,7 +112,7 @@ const BookingsPage: React.FC = () => {
 
   const fetchSubscriptions = () => {
     if (user?.id) {
-      getSubscriptions()
+      getSubscriptions(user.id)
         .then((data) => setSubscriptions(data))
         .catch((err) => console.error("Failed to load subscriptions:", err));
     }
@@ -140,17 +140,15 @@ const BookingsPage: React.FC = () => {
   }, [user]);
 
   // Handle create booking
-  const handleCreateChange = (
-    e: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>,
-  ) => {
+  const handleCreateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setCreateValues((prev) => ({ ...prev, [name as string]: value }));
+    setCreateValues((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleCreateDateChange = (date: Date | null) => {
     setCreateValues((prev) => ({
       ...prev,
-      date: date ? date.toISOString() : "",
+      date: date ? date.toISOString() : undefined,
     }));
   };
 
@@ -203,7 +201,7 @@ const BookingsPage: React.FC = () => {
   const handleEditDateChange = (date: Date | null) => {
     setEditValues((prev) => ({
       ...prev,
-      date: date ? date.toISOString() : "",
+      date: date ? date.toISOString() : undefined,
     }));
   };
 
@@ -594,13 +592,15 @@ const BookingsPage: React.FC = () => {
                   name="subscription_id"
                   value={createValues.subscription_id || ""}
                   label="Subscription"
-                  onChange={(e) =>
-                    handleCreateChange(
-                      e as React.ChangeEvent<
-                        HTMLInputElement | { name?: string; value: unknown }
-                      >,
-                    )
-                  }
+                  onChange={(e) => {
+                    const syntheticEvent = {
+                      target: {
+                        name: "subscription_id",
+                        value: e.target.value,
+                      },
+                    } as React.ChangeEvent<HTMLInputElement>;
+                    handleCreateChange(syntheticEvent);
+                  }}
                   required
                 >
                   <MenuItem value="">Select Subscription</MenuItem>
@@ -635,7 +635,15 @@ const BookingsPage: React.FC = () => {
                   name="status"
                   value={createValues.status || "pending"}
                   label="Status"
-                  onChange={handleCreateChange}
+                  onChange={(e) => {
+                    const syntheticEvent = {
+                      target: {
+                        name: "status",
+                        value: e.target.value,
+                      },
+                    } as React.ChangeEvent<HTMLInputElement>;
+                    handleCreateChange(syntheticEvent);
+                  }}
                 >
                   <MenuItem value="confirmed">Confirmed</MenuItem>
                   <MenuItem value="pending">Pending</MenuItem>
@@ -711,7 +719,15 @@ const BookingsPage: React.FC = () => {
                     name="status"
                     value={editValues.status || editBooking.status || "pending"}
                     label="Status"
-                    onChange={handleEditChange}
+                    onChange={(e) => {
+                      const syntheticEvent = {
+                        target: {
+                          name: "status",
+                          value: e.target.value,
+                        },
+                      } as React.ChangeEvent<HTMLInputElement>;
+                      handleEditChange(syntheticEvent);
+                    }}
                   >
                     <MenuItem value="confirmed">Confirmed</MenuItem>
                     <MenuItem value="pending">Pending</MenuItem>
