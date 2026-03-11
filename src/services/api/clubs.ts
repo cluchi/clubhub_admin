@@ -1,8 +1,29 @@
 import type { Club } from "../../types";
 import { supabase } from "../supabase";
 
-export async function getClubs(): Promise<Club[]> {
-  const { data, error } = await supabase.from("clubs").select("*");
+export async function getClubs(profileId?: string): Promise<Club[]> {
+  if (!profileId) return [];
+
+  // Join with club_members to only get clubs the user manages
+  // Step 1: Get club_ids for this profile where role is 'admin'
+  const { data: clubMembers, error: clubError } = await supabase
+    .from("club_members")
+    .select("club_id")
+    .eq("profile_id", profileId)
+    .eq("role", "admin");
+
+  if (clubError) throw clubError;
+
+  const clubIds = clubMembers?.map((cm) => cm.club_id).filter(Boolean) || [];
+
+  if (clubIds.length === 0) return [];
+
+  // Step 2: Get clubs for those club_ids
+  const { data, error } = await supabase
+    .from("clubs")
+    .select("*")
+    .in("id", clubIds);
+
   if (error) throw error;
   return data || [];
 }
@@ -29,7 +50,7 @@ export async function createClub(club: Partial<Club>): Promise<Club | null> {
 
 export async function updateClub(
   id: string,
-  updates: Partial<Club>
+  updates: Partial<Club>,
 ): Promise<Club | null> {
   const { data, error } = await supabase
     .from("clubs")

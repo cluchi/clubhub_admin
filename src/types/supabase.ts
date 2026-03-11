@@ -118,6 +118,16 @@ export interface Database {
           // ...add other columns as needed
         };
       };
+      club_members: {
+        Row: {
+          id: string;
+          club_id: string | null;
+          profile_id: string | null;
+          role: string | null;
+          inserted_at: string | null;
+          // ...add other columns as needed
+        };
+      };
       notifications: {
         Row: {
           id: string;

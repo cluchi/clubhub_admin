@@ -115,7 +115,7 @@ const ClubsPage: React.FC = () => {
   const fetchClubs = () => {
     if (user?.id) {
       setLoading(true);
-      getClubs()
+      getClubs(user.id)
         .then((data) => setClubs(data))
         .catch((err) => setError(err.message || "Failed to load clubs"))
         .finally(() => setLoading(false));
