@@ -94,6 +94,8 @@ export interface Database {
           id: string;
           parent_id: string;
           name: string;
+          date_of_birth: string | null;
+          created_at: string;
           // ...add other columns as needed
         };
       };
@@ -102,6 +104,17 @@ export interface Database {
           id: string;
           name: string;
           email: string;
+          phone: string | null;
+          created_at: string;
+          // ...add other columns as needed
+        };
+      };
+      parent_clubs: {
+        Row: {
+          id: string;
+          parent_id: string;
+          club_id: string;
+          created_at: string;
           // ...add other columns as needed
         };
       };

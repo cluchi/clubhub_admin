@@ -22,6 +22,7 @@ import PaymentIcon from "@mui/icons-material/Payment";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import SettingsIcon from "@mui/icons-material/Settings";
 import BusinessIcon from "@mui/icons-material/Business";
+import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 220;
@@ -30,6 +31,9 @@ const navItems = [
   { text: "Dashboard", icon: <DashboardIcon />, path: "/" },
   { text: "Classes", icon: <ClassIcon />, path: "/classes" },
   { text: "Clubs", icon: <BusinessIcon />, path: "/clubs" },
+  { text: "Parents", icon: <PeopleIcon />, path: "/parents" },
+  { text: "Add Parent", icon: <AddIcon />, path: "/parents/add" },
+  { text: "Add Child", icon: <AddIcon />, path: "/children/add" },
   { text: "Subscriptions", icon: <BookIcon />, path: "/subscriptions" },
   { text: "Bookings", icon: <BookIcon />, path: "/bookings" },
   { text: "Trainers", icon: <PeopleIcon />, path: "/trainers" },

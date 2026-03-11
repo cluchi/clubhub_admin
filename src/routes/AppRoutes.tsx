@@ -11,6 +11,9 @@ import NotificationsPage from "../pages/Notifications/NotificationsPage";
 import SettingsPage from "../pages/Settings/SettingsPage";
 import ClubsPage from "../pages/Clubs/ClubsPage";
 import EditClubPage from "../pages/Clubs/EditClubPage";
+import ParentsPage from "../pages/Parents/ParentsPage";
+import AddParentPage from "../pages/Parents/AddParentPage";
+import AddChildPage from "../pages/Children/AddChildPage";
 import AuthPage from "../pages/Auth/AuthPage";
 
 const AppRoutes = () => (
@@ -31,6 +34,9 @@ const AppRoutes = () => (
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/clubs" element={<ClubsPage />} />
             <Route path="/clubs/edit" element={<EditClubPage />} />
+            <Route path="/parents" element={<ParentsPage />} />
+            <Route path="/parents/add" element={<AddParentPage />} />
+            <Route path="/children/add" element={<AddChildPage />} />
           </Routes>
         </ProtectedRoute>
       }
