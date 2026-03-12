@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -100,7 +100,7 @@ const BookingsPage: React.FC = () => {
 
   const { user } = useAuth();
 
-  const fetchBookings = () => {
+  const fetchBookings = useCallback(() => {
     if (user?.id) {
       setLoading(true);
       getBookings(user.id)
@@ -108,36 +108,36 @@ const BookingsPage: React.FC = () => {
         .catch((err) => setError(err.message || "Failed to load bookings"))
         .finally(() => setLoading(false));
     }
-  };
+  }, [user?.id]);
 
-  const fetchSubscriptions = () => {
+  const fetchSubscriptions = useCallback(() => {
     if (user?.id) {
       getSubscriptions(user.id)
         .then((data) => setSubscriptions(data))
         .catch((err) => console.error("Failed to load subscriptions:", err));
     }
-  };
+  }, [user?.id]);
 
-  const fetchCourses = () => {
+  const fetchCourses = useCallback(() => {
     if (user?.id) {
       getCourses(user.id)
         .then((data) => setCourses(data))
         .catch((err) => console.error("Failed to load courses:", err));
     }
-  };
+  }, [user?.id]);
 
-  const fetchChildren = () => {
+  const fetchChildren = useCallback(() => {
     getChildren()
       .then((data) => setChildren(data))
       .catch((err) => console.error("Failed to load children:", err));
-  };
+  }, []);
 
   useEffect(() => {
     fetchBookings();
     fetchSubscriptions();
     fetchCourses();
     fetchChildren();
-  }, [user]);
+  }, [fetchBookings, fetchSubscriptions, fetchCourses, fetchChildren]);
 
   // Handle create booking
   const handleCreateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -531,7 +531,10 @@ const BookingsPage: React.FC = () => {
                               Schedule:{" "}
                               {Array.isArray(courseDetails.schedule)
                                 ? courseDetails.schedule.map(
-                                    (slot: any, idx: number) => (
+                                    (
+                                      slot: { days: string[]; time: string },
+                                      idx: number,
+                                    ) => (
                                       <span key={idx}>
                                         {slot.days?.join(", ")} - {slot.time}
                                         {idx <

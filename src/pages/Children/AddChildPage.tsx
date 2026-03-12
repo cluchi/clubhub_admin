@@ -24,7 +24,6 @@ const AddChildPage: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [parents, setParents] = useState<(Parent & { clubs: Club[] })[]>([]);
-  const [userClubs, setUserClubs] = useState<Club[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -56,10 +55,6 @@ const AddChildPage: React.FC = () => {
           .select("*");
         if (clubsError) throw clubsError;
 
-        const userClubsData = allClubs.filter((club) =>
-          userClubIds.includes(club.id),
-        );
-        setUserClubs(userClubsData);
 
         // Get parents with their clubs (only those in user's clubs)
         const { data: parentsData, error: parentsError } = await supabase
@@ -140,7 +135,7 @@ const AddChildPage: React.FC = () => {
         date_of_birth: form.date_of_birth || null,
       };
 
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("children")
         .insert([childData])
         .select()
