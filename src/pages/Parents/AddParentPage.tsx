@@ -24,7 +24,6 @@ import type { Club } from "../../types";
 const AddParentPage: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [clubs, setClubs] = useState<Club[]>([]);
   const [userClubs, setUserClubs] = useState<Club[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -64,7 +63,6 @@ const AddParentPage: React.FC = () => {
           userClubIds.includes(club.id),
         );
 
-        setClubs(allClubs);
         setUserClubs(userClubsData);
 
         // Auto-select first club if user has only one club

@@ -126,7 +126,7 @@ export class ImageUploadService {
       const fileName = this.generateFileName(file.name);
 
       // Upload to Supabase
-      const { data, error } = await supabase.storage
+      const { error } = await supabase.storage
         .from(this.BUCKET_NAME)
         .upload(fileName, compressedFile, {
           cacheControl: "3600",

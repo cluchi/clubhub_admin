@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -90,7 +90,7 @@ const SubscriptionsPage: React.FC = () => {
 
   const { user } = useAuth();
 
-  const fetchSubscriptions = () => {
+  const fetchSubscriptions = useCallback(() => {
     if (user?.id) {
       setLoading(true);
       getSubscriptions(user.id)
@@ -98,35 +98,29 @@ const SubscriptionsPage: React.FC = () => {
         .catch((err) => setError(err.message || "Failed to load subscriptions"))
         .finally(() => setLoading(false));
     }
-  };
+  }, [user?.id]);
 
-  const fetchCourses = () => {
+  const fetchCourses = useCallback(() => {
     if (user?.id) {
       getCourses(user.id)
         .then((data) => setCourses(data))
         .catch((err) => console.error("Failed to load courses:", err));
     }
-  };
+  }, [user?.id]);
 
-  const fetchChildren = () => {
+  const fetchChildren = useCallback(() => {
     getChildren()
       .then((data) => setChildren(data))
       .catch((err) => console.error("Failed to load children:", err));
-  };
+  }, []);
 
   useEffect(() => {
     fetchSubscriptions();
     fetchCourses();
     fetchChildren();
-  }, [user]);
+  }, [fetchSubscriptions, fetchCourses, fetchChildren]);
 
   // Handle create subscription
-  const handleCreateChange = (
-    e: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>,
-  ) => {
-    const { name, value } = e.target;
-    setCreateValues((prev) => ({ ...prev, [name as string]: value }));
-  };
 
   const handleCreateSave = async () => {
     setLoading(true);
