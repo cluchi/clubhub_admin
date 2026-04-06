@@ -18,7 +18,7 @@ export async function getChildById(id: string): Promise<Child | null> {
 }
 
 export async function createChild(
-  child: Partial<Child>
+  child: Partial<Child>,
 ): Promise<Child | null> {
   const { data, error } = await supabase
     .from("children")
@@ -31,7 +31,7 @@ export async function createChild(
 
 export async function updateChild(
   id: string,
-  updates: Partial<Child>
+  updates: Partial<Child>,
 ): Promise<Child | null> {
   const { data, error } = await supabase
     .from("children")

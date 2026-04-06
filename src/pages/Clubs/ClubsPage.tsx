@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -112,19 +112,19 @@ const ClubsPage: React.FC = () => {
 
   const { user } = useAuth();
 
-  const fetchClubs = () => {
+  const fetchClubs = useCallback(() => {
     if (user?.id) {
       setLoading(true);
-      getClubs()
+      getClubs(user.id)
         .then((data) => setClubs(data))
         .catch((err) => setError(err.message || "Failed to load clubs"))
         .finally(() => setLoading(false));
     }
-  };
+  }, [user?.id]);
 
   useEffect(() => {
     fetchClubs();
-  }, [user]);
+  }, [fetchClubs]);
 
   const [editError, setEditError] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);

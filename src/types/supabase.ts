@@ -85,6 +85,7 @@ export interface Database {
           id: string;
           subscription_id: string;
           date: string;
+          status: string;
           // ...add other columns as needed
         };
       };
@@ -93,6 +94,38 @@ export interface Database {
           id: string;
           parent_id: string;
           name: string;
+          date_of_birth: string | null;
+          created_at: string;
+          // ...add other columns as needed
+        };
+      };
+      parents: {
+        Row: {
+          id: string;
+          name: string;
+          email: string;
+          phone: string | null;
+          status: string;
+          created_at: string;
+          // ...add other columns as needed
+        };
+      };
+      parent_clubs: {
+        Row: {
+          id: string;
+          parent_id: string;
+          club_id: string;
+          created_at: string;
+          // ...add other columns as needed
+        };
+      };
+      club_members: {
+        Row: {
+          id: string;
+          club_id: string | null;
+          profile_id: string | null;
+          role: string | null;
+          inserted_at: string | null;
           // ...add other columns as needed
         };
       };

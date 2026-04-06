@@ -22,6 +22,7 @@ import PaymentIcon from "@mui/icons-material/Payment";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import SettingsIcon from "@mui/icons-material/Settings";
 import BusinessIcon from "@mui/icons-material/Business";
+import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 220;
@@ -30,6 +31,9 @@ const navItems = [
   { text: "Dashboard", icon: <DashboardIcon />, path: "/" },
   { text: "Classes", icon: <ClassIcon />, path: "/classes" },
   { text: "Clubs", icon: <BusinessIcon />, path: "/clubs" },
+  { text: "Parents", icon: <PeopleIcon />, path: "/parents" },
+  { text: "Add Parent", icon: <AddIcon />, path: "/parents/add" },
+  { text: "Add Child", icon: <AddIcon />, path: "/children/add" },
   { text: "Subscriptions", icon: <BookIcon />, path: "/subscriptions" },
   { text: "Bookings", icon: <BookIcon />, path: "/bookings" },
   { text: "Trainers", icon: <PeopleIcon />, path: "/trainers" },
@@ -44,7 +48,7 @@ const navItems = [
 ];
 
 const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
   const navigate = useNavigate();
 
   const { user, signOut } = useAuth();
@@ -91,7 +95,8 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       </AppBar>
       <Drawer
         variant="persistent"
-        open={open}
+        // open={open}
+        open
         onClose={() => setOpen(false)}
         sx={{
           width: drawerWidth,
@@ -120,7 +125,9 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         sx={{
           flexGrow: 1,
           p: 3,
-          ml: open ? `${drawerWidth}px` : 0,
+          width: "100%",
+          height: "100vh",
+          // ml: open ? `${drawerWidth}px` : 0,
           transition: "margin 0.3s",
         }}
       >

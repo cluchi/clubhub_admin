@@ -18,6 +18,7 @@ export async function getCourses(profileId?: string): Promise<Course[]> {
     .select("*, trainer:trainer_id(*)")
     .in("club_id", clubIds);
   if (error) throw error;
+  console.log("Data fetched for courses:", data);
   return data || [];
 }
 
@@ -32,7 +33,7 @@ export async function getCourseById(id: string): Promise<Course | null> {
 }
 
 export async function createCourse(
-  course: Partial<Course>
+  course: Partial<Course>,
 ): Promise<Course | null> {
   const { data, error } = await supabase
     .from("courses")
@@ -45,7 +46,7 @@ export async function createCourse(
 
 export async function updateCourse(
   id: string,
-  updates: Partial<Course>
+  updates: Partial<Course>,
 ): Promise<Course | null> {
   console.log("Updating course with ID:", id, "with updates:", updates);
   const { data, error } = await supabase

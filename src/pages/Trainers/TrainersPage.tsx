@@ -28,6 +28,7 @@ import {
 import type { Trainer } from "../../services/api/trainers";
 import { useAuth } from "../../hooks/useAuth";
 import { supabase } from "../../services/supabase";
+import { ImageUpload } from "../../components/ImageUpload";
 
 const TrainersPage: React.FC = () => {
   const { user } = useAuth();
@@ -79,7 +80,7 @@ const TrainersPage: React.FC = () => {
       } catch (err: unknown) {
         if (err && typeof err === "object" && "message" in err) {
           setError(
-            (err as { message?: string }).message || "Failed to load trainers"
+            (err as { message?: string }).message || "Failed to load trainers",
           );
         } else {
           setError("Failed to load trainers");
@@ -110,15 +111,23 @@ const TrainersPage: React.FC = () => {
       ...addValues,
       club_id: clubIds[0],
     };
-    const result = await createTrainer(trainerData);
-    if (!result) {
-      setAddError("Failed to add trainer");
-      return;
+    try {
+      const result = await createTrainer(trainerData);
+      if (!result) {
+        setAddError("Failed to add trainer");
+        return;
+      }
+      setAddDialogOpen(false);
+      setAddValues({ name: "", bio: "", avatar: "", experience: "" });
+      const trainersForClub = await getTrainersByClub(clubIds[0]);
+      setTrainers(trainersForClub);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setAddError(error.message);
+      } else {
+        setAddError("An unexpected error occurred while adding the trainer");
+      }
     }
-    setAddDialogOpen(false);
-    setAddValues({ name: "", bio: "", avatar: "", experience: "" });
-    const trainersForClub = await getTrainersByClub(clubIds[0]);
-    setTrainers(trainersForClub);
   };
 
   const handleEditSave = async () => {
@@ -127,20 +136,28 @@ const TrainersPage: React.FC = () => {
       setEditError("Name is required");
       return;
     }
-    const result = await updateTrainer(editValues.id, {
-      name: editValues.name,
-      bio: editValues.bio,
-      avatar: editValues.avatar,
-      experience: editValues.experience,
-    });
-    if (!result) {
-      setEditError("Failed to update trainer");
-      return;
-    }
-    setEditDialogOpen(false);
-    if (clubIds.length > 0) {
-      const trainersForClub = await getTrainersByClub(clubIds[0]);
-      setTrainers(trainersForClub);
+    try {
+      const result = await updateTrainer(editValues.id, {
+        name: editValues.name,
+        bio: editValues.bio,
+        avatar: editValues.avatar,
+        experience: editValues.experience,
+      });
+      if (!result) {
+        setEditError("Failed to update trainer");
+        return;
+      }
+      setEditDialogOpen(false);
+      if (clubIds.length > 0) {
+        const trainersForClub = await getTrainersByClub(clubIds[0]);
+        setTrainers(trainersForClub);
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setEditError(error.message);
+      } else {
+        setEditError("An unexpected error occurred while updating the trainer");
+      }
     }
   };
 
@@ -192,7 +209,7 @@ const TrainersPage: React.FC = () => {
                           await deleteTrainer(trainer.id);
                           if (clubIds.length > 0) {
                             const trainersForClub = await getTrainersByClub(
-                              clubIds[0]
+                              clubIds[0],
                             );
                             setTrainers(trainersForClub);
                           }
@@ -205,7 +222,20 @@ const TrainersPage: React.FC = () => {
                 }
               >
                 <ListItemAvatar>
-                  <Avatar>{trainer.avatar || trainer.name[0]}</Avatar>
+                  <Avatar
+                    src={trainer.avatar || undefined}
+                    alt={trainer.name}
+                    sx={{
+                      width: 56,
+                      height: 56,
+                      fontSize: 24,
+                      backgroundColor: trainer.avatar
+                        ? "transparent"
+                        : "#bdbdbd",
+                    }}
+                  >
+                    {!trainer.avatar && trainer.name[0]}
+                  </Avatar>
                 </ListItemAvatar>
                 <ListItemText
                   primary={trainer.name}
@@ -250,13 +280,18 @@ const TrainersPage: React.FC = () => {
             fullWidth
             multiline
           />
-          <TextField
-            margin="dense"
-            label="Avatar (initial or emoji)"
-            name="avatar"
-            value={addValues.avatar}
-            onChange={handleAddChange}
-            fullWidth
+          <ImageUpload
+            onImageUpload={(file, url) => {
+              if (url) {
+                setAddValues((prev) => ({ ...prev, avatar: url }));
+              } else {
+                // Avatar was deleted, clear the field
+                setAddValues((prev) => ({ ...prev, avatar: "" }));
+              }
+            }}
+            currentImageUrl={addValues.avatar}
+            currentImageName={addValues.name}
+            label="Trainer Photo"
           />
           <TextField
             margin="dense"
@@ -302,15 +337,18 @@ const TrainersPage: React.FC = () => {
             fullWidth
             multiline
           />
-          <TextField
-            margin="dense"
-            label="Avatar (initial or emoji)"
-            name="avatar"
-            value={editValues.avatar}
-            onChange={(e) =>
-              setEditValues((v) => ({ ...v, avatar: e.target.value }))
-            }
-            fullWidth
+          <ImageUpload
+            onImageUpload={(file, url) => {
+              if (url) {
+                setEditValues((prev) => ({ ...prev, avatar: url }));
+              } else {
+                // Avatar was deleted, clear the field
+                setEditValues((prev) => ({ ...prev, avatar: "" }));
+              }
+            }}
+            currentImageUrl={editValues.avatar}
+            currentImageName={editValues.name}
+            label="Trainer Photo"
           />
           <TextField
             margin="dense"
