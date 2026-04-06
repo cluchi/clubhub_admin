@@ -185,7 +185,7 @@ const BookingsPage: React.FC = () => {
     setEditValues({
       ...booking,
       status: booking.status ?? "pending",
-      date: booking.date ? new Date(booking.date) : null,
+      date: booking.date ? new Date(booking.date).toISOString() : undefined,
     });
     setEditError(null);
     setEditDialogOpen(true);
@@ -510,7 +510,7 @@ const BookingsPage: React.FC = () => {
                       <TableCell>
                         <StatusChip
                           label={booking.status}
-                          icon={getStatusIcon(booking.status)}
+                          icon={getStatusIcon(booking.status) ?? undefined}
                           status={booking.status}
                         />
                       </TableCell>

@@ -281,7 +281,7 @@ const TrainersPage: React.FC = () => {
             multiline
           />
           <ImageUpload
-            onImageUpload={(file, url) => {
+            onImageUpload={(_file, url) => {
               if (url) {
                 setAddValues((prev) => ({ ...prev, avatar: url }));
               } else {
@@ -338,7 +338,7 @@ const TrainersPage: React.FC = () => {
             multiline
           />
           <ImageUpload
-            onImageUpload={(file, url) => {
+            onImageUpload={(_file, url) => {
               if (url) {
                 setEditValues((prev) => ({ ...prev, avatar: url }));
               } else {

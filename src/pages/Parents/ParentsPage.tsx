@@ -111,7 +111,7 @@ const ParentsPage: React.FC = () => {
 
         // Filter parents to only those in user's clubs
         const filteredParents = parentsWithClubs.filter((parent) =>
-          parent.clubs.some((club) => userClubIds.includes(club.id)),
+          parent.clubs.some((club : Club) => userClubIds.includes(club.id)),
         );
 
         setParents(filteredParents);

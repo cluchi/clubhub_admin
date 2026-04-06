@@ -406,7 +406,7 @@ const SubscriptionsPage: React.FC = () => {
                     <TableCell>
                       <StatusChip
                         label={subscription.status}
-                        icon={getStatusIcon(subscription.status)}
+                        icon={getStatusIcon(subscription.status) ?? undefined}
                         status={subscription.status}
                       />
                     </TableCell>
